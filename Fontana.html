@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Francesco Galletti
+	Introduction to Programming
+	9/29/14
+	Project 2 - Game v0.2 -->
+	
+	  <head>
+      <!-- title of the web page -->
+      <title>
+         Fontana: The Illegible Scroll
+      </title>
+      <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+      <script type="text/javascript">
+		
+		 //
+		 //Setting global variables.
+		 //
+		 
+		 //currLoc is a global variable that determines the initial location.
+         var currLoc=0;
+         //countzero is a global variable created to determine whether the player has never been in room zero.
+         var countzero  = false;
+         //countone is a global variable created to determine whether the player has never been in room one.
+		 var countone  = false;
+         //counttwo is a global variable created to determine whether the player has never been in room two.
+		 var counttwo  = false;
+         //countthree is a global variable created to determine whether the player has never been in room three.
+		 var countthree  = false;
+         //countfour is a global variable created to determine whether the player has never been in room four.
+		 var countfour = false;
+         //countfive is a global variable created to determine whether the player has never been in room five.
+		 var countfive = false;
+         //score is a global variable representing the score of the player.
+		 var score=0;
+		 //navigationErrorCount is a global variable created to keep track of the amount of "mistakes" that the player commits.
+		 var navigationErrorCount = 0;
+		 //sarcasmThreshold is a global variable created to establish a total amount of "mistakes". When the amount of mistakes is reached, the game will "get sassy".
+         var sarcasmThreshold = 3;
+         
+         function goNorth() { //Function goNorth() makes the player go North from the current room (when possible).
+            if(currLoc === 1){ //If the currentLocation is the room number 1 and the player decided to go 'North', the currentLocation changes in room number 0.
+				currLoc = 0;
+				look();
+			} else {
+				if(currLoc ===  3) { //If the currentLocation is the room number 3 and the player clicked on 'North', the currentLocation changes in room number 2.
+					currLoc = 2;
+					look();
+				} else { 
+					if(currLoc ===  2) { //If the currentLocation is the room number 2 and the player clicked on 'North', the currentLocation changes in room number 5.
+						currLoc = 5;
+						look();
+					} else { //If the player decided to go 'North' but there is no room North from the currentLocation, the function navigationError() is called.'
+						navigationError();
+				    }
+				}				
+			}
+         }
+
+		function goSouth() { //Function goSouth() makes the player go South from the current room (when possible).
+            if(currLoc === 0){ //If the currentLocation is the room number 0 and the player decided to go 'South', the currentLocation changes in room number 1.
+				currLoc = 1;
+				look();
+			} else {
+				if(currLoc ===  2) { //If the currentLocation is the room number 2 and the player decided to go 'South', the currentLocation changes in room number 3.
+					currLoc = 3;
+					look();
+				} else {
+					if(currLoc ===  5) { //If the currentLocation is the room number 5 and the player decided to go 'South', the currentLocation changes in room number 2.
+						currLoc = 2;
+						look();
+					} else { //If the player decided to go 'South' but there is no room South from the currentLocation, the function navigationError() is called.'
+						navigationError();
+					}
+				}				
+			}
+         }
+         
+         function goEast() { //Function goEast() makes the player go East from the current room (when possible). The logic of the If/Else statements is the same of goNorth() and goSouth().
+            if(currLoc === 1){
+				currLoc = 2;
+				look();
+			} else {
+				if(currLoc ===  2) {
+					currLoc = 4;
+					look();
+				} else {
+					navigationError();
+				}
+			}
+		 }						
+			
+         
+         function goWest() { //Function goWest() makes the player go West from the current room (when possible). The logic of the If/Else statements is the same of goNorth() and goSouth().
+            if(currLoc === 2){
+				currLoc = 1;
+				look();
+			} else {
+				if(currLoc ===  4) {
+					currLoc = 2;
+					look();
+				} else {
+					navigationError();
+				}
+			}
+		 }	
+		 
+		 
+		 //
+		 //single event handler for each location
+		 //
+		 function kitchen() { //function kitchen() takes no parameter. It creates a local variable 'message' and it displays it in the textarea using the function dispMsg(message). Var message is the description of the room.
+			var message = "(0) You find yourself in a dark kitchen. Soft light is coming through the window. It is the moonlight. You are still tired and it is hard to see around you. There is a table and two chairs. \n \n \n";
+			dispMsg(message);
+		 }
+		 
+		 function bathroom() { //function bathroom() takes no parameter. It creates a local variable 'message' and it displays it in the textarea using the function dispMsg(message).
+			var message = "(1) You enter a dark bathroom. The pavement is extremely wet and slippery. There is a broken mirror on the side. Pieces of the broken mirrors are spread throughout the ground. \n \n \n";
+			dispMsg(message);
+		 }
+         
+         function livroom() { //function livroom() takes no parameter. It creates a local variable 'message' and it displays it in the textarea using the function dispMsg(message).
+			var message = "(2)You enter a dark room. It is the living room. There is a dusty couch and a broken remote controller on the ground.\n \n \n";
+			dispMsg(message);         
+         }
+         
+         function garden() { //function garden() takes no parameter. It creates a local variable 'message' and it displays it in the textarea using the function dispMsg(message).
+			var message = "(3) You find yourself in the garden. You are outside! Fresh air fills your lungs, freedom is finally reality. Now run! GAME OVER. \n \n \n";
+			dispMsg(message);
+         }
+         
+         function bedroom() { //function bedroom() takes no parameter. It creates a local variable 'message' and it displays it in the textarea using the function dispMsg(message).
+			var message = "(4) You enter the bedroom. There are a few pillows on the bed. A long curtain make this room so dark... \n \n \n";
+			dispMsg(message);
+         }
+         
+         function closet() { //function closet() takes no parameter. It creates a local variable 'message' and it displays it in the textarea using the function dispMsg(message).
+			var message = "(5) You enter an extremely dark closet. There is a broom and a lot of dust. \n \n \n";
+			dispMsg(message);
+         }
+         
+         function dispMsg(message) { //Function dispMsg(message) displays the message given as input plus the Score in the textarea. The assignment says that the name should be updateDisplay but I already had the code from Project two full of dispMsg. This comment is done just to notice the reader of the code that dispMsg() is actually updateDisplay().
+            var target = document.getElementById("taMain");
+            target.value = message + "\n\n" + target.value;
+         }
+         
+         function navigationError() { //function navigationError() takes no parameter. If the value of navigation errors variable is higher than the value of the variable sarcasmThreshold, the 'game' gets "sassy".
+            navigationErrorCount = navigationErrorCount + 1; //Every time the player does a mistake, the amount of navigation errors increases by 1.
+            if (navigationErrorCount < sarcasmThreshold) {
+               dispMsg("You cannot go that way.");
+            } else {
+               dispMsg("Are you even trying, noob?");
+            }            
+         }
+		 
+		 function btnGo_click() { //function btnGo_click() takes no parameter. It is used to input in the program what the player is typing in the command box.
+			var playerinput = document.getElementById("txtCommand").value;
+			if ( (playerinput === "n") || (playerinput ==="N") ) {
+				goNorth();
+			} else {
+				if ( (playerinput === "s") || (playerinput ==="S") ) {
+				goSouth();
+				} else {
+					if ( (playerinput === "w") || (playerinput ==="W") ) {
+						goWest();
+					} else {
+						if ( (playerinput === "e") || (playerinput ==="E") ) {
+							goEast();
+						} else {
+							dispMsg("Invalid input. Try n - s - w - e");
+						}
+					}	
+				}		 
+			}
+		 }
+		 
+         function checkScore() { //Function checkScore() takes no parameter. It checks if the player has ever been in a room before. If he/she has not, the function adds 5 points to the score.
+             if ( (! countzero) && (currLoc === 0) ) {            
+                  score = score + 5;
+                  countzero = true;
+            } else if ( (! countone) && (currLoc === 1) ) {            
+                  score = score + 5;
+                  countone = true;
+            } else if ( (! counttwo) && (currLoc === 2) ) {            
+                  score = score + 5;
+                  counttwo = true;
+            } else if ( (! countthree) && (currLoc === 3) ) {            
+                  score = score + 5;
+                  countthree = true;
+            } else if ( (! countfour) && (currLoc === 4) ) {            
+                  score = score + 5;
+                  countfour = true;
+            } else if ( (! countfive) && (currLoc === 5) ) {            
+                  score = score + 5;
+                  countfive = true;
+            }            
+         }
+         
+         function look() {// function look() takes no parameter. It is done with the switch-case method which makes the code shorter. Depending on the value of currLoc, there are different cases that trigger.
+            document.getElementById("North").disabled = false;
+            document.getElementById("South").disabled = false;
+            document.getElementById("West").disabled = false;
+            document.getElementById("East").disabled = false;
+            switch(currLoc) {//Disables the buttons that are unavailable because there are no rooms towards that direction
+               case 0: kitchen(); //At the beginning of the game I decided to not block the buttons so that the function navigationError() can trigger and it is not useless.
+					   document.getElementById("North").disabled = true;
+					   document.getElementById("West").disabled = true;
+					   document.getElementById("East").disabled = true;
+                       break;
+               case 1: bathroom();
+					   document.getElementById("South").disabled = true;
+					   document.getElementById("West").disabled = true;
+                       break; 
+               case 2: livroom();
+                       break;
+               case 3: garden();
+					   document.getElementById("North").disabled = true;
+					   document.getElementById("South").disabled = true;
+					   document.getElementById("West").disabled = true;
+					   document.getElementById("East").disabled = true;
+                       break;
+               case 4: bedroom();
+					   document.getElementById("North").disabled = true;
+					   document.getElementById("South").disabled = true;
+					   document.getElementById("East").disabled = true;
+                       break;
+               case 5: closet();
+					   document.getElementById("North").disabled = true;
+					   document.getElementById("West").disabled = true;
+					   document.getElementById("East").disabled = true;
+					   break;
+               default: desc = "You cannot go that way";
+            }
+            checkScore();
+            var desc ="Score: " + score + "\n";
+            dispMsg(desc);
+         }
+      </script>
+   </head>
+   <body>
+       Mailto:
+		<address> <!--Looked up on 'StackOverFlow' to have an idea of how to use mailto -->
+		Francesco (<a href="mailto:francesco.galletti1@marist.edu">- Marist Student Email -</a>, <a href="mailto:bogello@hotmail.com">- Personal Email -</a>)
+		</address><br>--------------------------------------------<br><br>
+	   
+	   Fontana: The Illegible Scroll<br>
+	   Your name is John. You wake up in the middle of the night and you don't remember anything about your past.
+	   <br>	   
+	   You are in a dark house and you want to find a way out of there. Let's go!
+       
+       <br>
+       <br>
+       
+       <!-- textarea -->
+       <textarea rows="10" cols="40" id="taMain">You find yourself in a dark kitchen.</textarea>
+	   
+	   <br>
+	   <br>
+	   
+	   <!-- command box where the player types commands -->
+	   Command:       
+       <input type="text" 
+              id = "txtCommand"
+              name="txtCommand">
+
+       <input type="button"
+              value="Go" 
+              onclick="btnGo_click();" /> 
+       
+       <br>
+       <br>
+	   
+       <input type="button"
+              value="North"
+              id="North"
+              onclick="goNorth();" />
+              
+       <input type="button"
+              value="South"
+              id="South"
+              onclick="goSouth();" />
+              
+       <input type="button"
+              value="West"
+              id="West"
+              onclick="goWest();" />
+              
+       <input type="button"
+              value="East"
+              id="East"
+              onclick="goEast();" />
+                   
+   </body>
+</html>
